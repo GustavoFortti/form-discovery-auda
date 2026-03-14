@@ -1034,131 +1034,93 @@ function doSubmit() {
   lines.push('');
   lines.push('Segue o Formulário de Discovery MedGrid preenchido pela instituição: ' + inst + '.');
   lines.push('');
-  lines.push('============================================================');
 
   document.querySelectorAll('.section-card').forEach(section => {
     const secTitle = section.querySelector('.sec-title')?.textContent?.trim() || '';
     const secNum   = section.querySelector('.sec-num')?.textContent?.trim()   || '';
-    lines.push('');
-    lines.push(secNum + ' — ' + secTitle);
-    lines.push('------------------------------------------------------------');
+    const secLines = [];
 
     section.querySelectorAll('.fgroup').forEach(fgroup => {
       const label = (fgroup.querySelector('.flabel')?.textContent || '').replace(/\*/g, '').trim();
       if (!label) return;
 
-      // Tabela de prioridades
+      // Tabela de prioridades — só linhas preenchidas
       const ptable = fgroup.querySelector('.ptable');
       if (ptable) {
-        lines.push('');
-        lines.push(label + ':');
+        const rows = [];
         ptable.querySelectorAll('tbody tr').forEach(row => {
-          const area     = row.querySelector('.area-badge')?.textContent?.trim() || '';
-          const priority = row.querySelector('select')?.value || '(não selecionado)';
-          lines.push('  • ' + area + ': ' + priority);
+          const val = row.querySelector('select')?.value;
+          if (!val) return;
+          const area = row.querySelector('.area-badge')?.textContent?.trim() || '';
+          rows.push('  ' + area + ': ' + val);
         });
+        if (rows.length) {
+          secLines.push(label + ':');
+          rows.forEach(r => secLines.push(r));
+        }
         return;
       }
 
-      // Checkboxes
+      // Checkboxes — só marcados
       const checkboxes = fgroup.querySelectorAll('input[type="checkbox"]');
       if (checkboxes.length > 0) {
         const checked = [...checkboxes]
           .filter(cb => cb.checked)
           .map(cb => cb.closest('.chip')?.textContent?.trim())
           .filter(Boolean);
-        lines.push(label + ': ' + (checked.length ? checked.join(', ') : '(nenhum selecionado)'));
+        if (checked.length) secLines.push(label + ': ' + checked.join(', '));
         return;
       }
 
-      // Radio buttons
+      // Radio buttons — só se selecionado
       const radios = fgroup.querySelectorAll('input[type="radio"]');
       if (radios.length > 0) {
         const checked = [...radios].find(r => r.checked);
-        const val = checked?.closest('.chip')?.textContent?.trim() || '(não selecionado)';
-        lines.push(label + ': ' + val);
+        if (checked) secLines.push(label + ': ' + (checked.closest('.chip')?.textContent?.trim() || ''));
         return;
       }
 
-      // Escala de maturidade
+      // Escala de maturidade — só se clicado
       if (fgroup.querySelector('.scale-btn')) {
         const on = fgroup.querySelector('.scale-btn.on');
-        lines.push(label + ': ' + (on ? on.textContent.trim() + '/5' : '(não avaliado)'));
+        if (on) secLines.push(label + ': ' + on.textContent.trim() + '/5');
         return;
       }
 
-      // Textarea
+      // Textarea — só se preenchida
       const textarea = fgroup.querySelector('textarea');
       if (textarea) {
-        lines.push('');
-        lines.push(label + ':');
-        lines.push(textarea.value.trim() || '(não preenchido)');
-        lines.push('');
+        const v = textarea.value.trim();
+        if (v) { secLines.push(label + ':'); secLines.push(v); }
         return;
       }
 
-      // Select
+      // Select — só se escolhido
       const select = fgroup.querySelector('select');
       if (select) {
-        lines.push(label + ': ' + (select.value || '(não selecionado)'));
+        if (select.value) secLines.push(label + ': ' + select.value);
         return;
       }
 
-      // Input text / email / tel
+      // Input texto — só se preenchido
       const input = fgroup.querySelector('input');
       if (input) {
-        lines.push(label + ': ' + (input.value.trim() || '(não preenchido)'));
+        const v = input.value.trim();
+        if (v) secLines.push(label + ': ' + v);
       }
     });
+
+    if (secLines.length) {
+      lines.push('--- ' + secNum + ': ' + secTitle + ' ---');
+      secLines.forEach(l => lines.push(l));
+      lines.push('');
+    }
   });
 
-  lines.push('');
-  lines.push('============================================================');
   lines.push('Atenciosamente.');
 
-  const fullText = lines.join('\n');
-
-  function openEmail(pasteNote) {
-    const shortBody = pasteNote
-      ? 'Olá Thayse,\n\nSegue o Formulário de Discovery MedGrid preenchido pela instituição: ' + inst + '.\n\n' +
-        '[ Cole o conteúdo completo do formulário aqui com Ctrl+V — já está na sua área de transferência ]\n\n' +
-        'Atenciosamente.'
-      : fullText;
-    window.location.href = 'mailto:Thayse.azeredo@audaengenharia.com.br?subject=' + subj +
-      '&body=' + encodeURIComponent(shortBody);
-  }
-
-  function showToast(msg, color) {
-    let t = document.getElementById('_submit-toast');
-    if (!t) {
-      t = document.createElement('div');
-      t.id = '_submit-toast';
-      t.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%);' +
-        'padding:14px 28px;border-radius:10px;font-family:Syne,sans-serif;font-size:14px;' +
-        'font-weight:600;color:#fff;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.25);' +
-        'transition:opacity .4s;white-space:nowrap;';
-      document.body.appendChild(t);
-    }
-    t.textContent = msg;
-    t.style.background = color;
-    t.style.opacity = '1';
-    clearTimeout(t._hide);
-    t._hide = setTimeout(() => { t.style.opacity = '0'; }, 4000);
-  }
-
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(fullText)
-      .then(() => {
-        showToast('✅ Dados copiados! Cole com Ctrl+V no corpo do e-mail.', '#1a8fe3');
-        setTimeout(() => openEmail(true), 600);
-      })
-      .catch(() => {
-        showToast('⚠️ Abrindo e-mail com os dados preenchidos...', '#f59e0b');
-        openEmail(false);
-      });
-  } else {
-    openEmail(false);
-  }
+  const body = lines.join('\n');
+  window.location.href = 'mailto:Thayse.azeredo@audaengenharia.com.br?subject=' + subj + '&body=' + encodeURIComponent(body);
 }
 </script>
 
