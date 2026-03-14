@@ -1116,8 +1116,49 @@ function doSubmit() {
   lines.push('============================================================');
   lines.push('Atenciosamente.');
 
-  const body = encodeURIComponent(lines.join('\n'));
-  window.location.href = 'mailto:Thayse.azeredo@audaengenharia.com.br?subject=' + subj + '&body=' + body;
+  const fullText = lines.join('\n');
+
+  function openEmail(pasteNote) {
+    const shortBody = pasteNote
+      ? 'Olá Thayse,\n\nSegue o Formulário de Discovery MedGrid preenchido pela instituição: ' + inst + '.\n\n' +
+        '[ Cole o conteúdo completo do formulário aqui com Ctrl+V — já está na sua área de transferência ]\n\n' +
+        'Atenciosamente.'
+      : fullText;
+    window.location.href = 'mailto:Thayse.azeredo@audaengenharia.com.br?subject=' + subj +
+      '&body=' + encodeURIComponent(shortBody);
+  }
+
+  function showToast(msg, color) {
+    let t = document.getElementById('_submit-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = '_submit-toast';
+      t.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%);' +
+        'padding:14px 28px;border-radius:10px;font-family:Syne,sans-serif;font-size:14px;' +
+        'font-weight:600;color:#fff;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.25);' +
+        'transition:opacity .4s;white-space:nowrap;';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.background = color;
+    t.style.opacity = '1';
+    clearTimeout(t._hide);
+    t._hide = setTimeout(() => { t.style.opacity = '0'; }, 4000);
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(fullText)
+      .then(() => {
+        showToast('✅ Dados copiados! Cole com Ctrl+V no corpo do e-mail.', '#1a8fe3');
+        setTimeout(() => openEmail(true), 600);
+      })
+      .catch(() => {
+        showToast('⚠️ Abrindo e-mail com os dados preenchidos...', '#f59e0b');
+        openEmail(false);
+      });
+  } else {
+    openEmail(false);
+  }
 }
 </script>
 
