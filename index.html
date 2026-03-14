@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulário de Discovery – MedGrid × AUDA</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --mg-navy: #0B1D3A;
+  --mg-blue: #0E4FA3;
+  --mg-sky: #1A8FE3;
+  --mg-cyan: #00B4C4;
+  --mg-teal: #00A896;
+  --mg-ice: #EAF6FB;
+  --mg-slate: #5B7496;
+  --mg-border: rgba(30,90,160,0.16);
+  --mg-bg: #F2F6FB;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--mg-bg);
+  color: var(--mg-navy);
+  min-height: 100vh;
+}
+
+/* ── HERO ── */
+.hero {
+  background: var(--mg-navy);
+  position: relative;
+  overflow: hidden;
+  padding: 52px 60px 44px;
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,180,196,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,180,196,0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.hero-glow {
+  position: absolute; right: -80px; top: -60px;
+  width: 500px; height: 400px;
+  background: radial-gradient(ellipse, rgba(0,180,196,0.13) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-inner {
+  position: relative; z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 270px;
+  gap: 48px; align-items: center;
+}
+.partner-row { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+.brand-pill {
+  display: flex; align-items: center; gap: 9px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 6px; padding: 8px 14px;
+}
+.brand-mark {
+  width: 26px; height: 26px; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 11px;
+}
+.brand-mark.mg { background: var(--mg-cyan); color: var(--mg-navy); }
+.brand-mark.au { background: #E55A00; color: #fff; }
+.brand-name { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); letter-spacing: .02em; }
+.partner-sep { width: 1px; height: 24px; background: rgba(255,255,255,0.18); }
+.partner-label { font-size: 12px; color: rgba(255,255,255,0.38); font-style: italic; }
+
+.hero-eyebrow {
+  font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--mg-cyan);
+  margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
+}
+.hero-eyebrow::before { content: ''; display: block; width: 28px; height: 1.5px; background: var(--mg-cyan); }
+
+.hero-title {
+  font-family: 'Syne', sans-serif; font-size: 42px; font-weight: 800;
+  color: #fff; line-height: 1.08; letter-spacing: -.03em; margin-bottom: 18px;
+}
+.hero-title em { font-style: normal; color: var(--mg-cyan); }
+.hero-desc { font-size: 14px; font-weight: 300; color: rgba(255,255,255,0.55); line-height: 1.75; max-width: 480px; margin-bottom: 24px; }
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(0,180,196,0.12); border: 1px solid rgba(0,180,196,0.3);
+  border-radius: 100px; padding: 6px 16px;
+  font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--mg-cyan);
+}
+.hero-tag::before { content: '◉'; font-size: 9px; }
+
+.hero-right { display: flex; flex-direction: column; gap: 14px; }
+.stat-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px; padding: 20px 22px; position: relative; overflow: hidden;
+}
+.stat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--mg-cyan), transparent);
+}
+.stat-num { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: var(--mg-cyan); letter-spacing: -.04em; line-height: 1; }
+.stat-label { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 5px; line-height: 1.4; }
+
+/* ── PROGRESS ── */
+.progress-strip {
+  background: #0d2347;
+  padding: 13px 60px; display: flex; align-items: center; gap: 20px;
+  border-bottom: 1px solid rgba(0,180,196,0.2);
+}
+.progress-bar { flex: 1; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--mg-teal), var(--mg-cyan)); border-radius: 2px; transition: width .4s ease; }
+.progress-text { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; color: var(--mg-cyan); white-space: nowrap; }
+
+/* ── GUIDE ── */
+.guide-bar { background: #fff; border-bottom: 1px solid var(--mg-border); padding: 28px 60px; }
+.guide-label { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--mg-sky); margin-bottom: 18px; }
+.guide-steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; }
+.guide-step { display: flex; gap: 12px; align-items: flex-start; }
+.step-num {
+  min-width: 26px; width: 26px; height: 26px; border-radius: 50%;
+  background: var(--mg-navy); color: #fff;
+  font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+.step-text strong { display: block; font-size: 12px; font-weight: 500; color: var(--mg-navy); margin-bottom: 3px; }
+.step-text p { font-size: 11px; color: var(--mg-slate); line-height: 1.5; font-weight: 300; }
+
+/* ── FORM LAYOUT ── */
+.form-wrap { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.section-card {
+  background: #fff; border-radius: 14px;
+  border: 1px solid var(--mg-border);
+  margin-bottom: 22px; overflow: hidden;
+  box-shadow: 0 2px 10px rgba(11,29,58,0.05);
+}
+.sec-head {
+  background: var(--mg-navy); padding: 16px 26px;
+  display: flex; align-items: center; gap: 13px;
+  position: relative; overflow: hidden;
+}
+.sec-head::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, transparent 60%, rgba(0,180,196,0.08));
+}
+.sec-ico {
+  width: 34px; height: 34px; min-width: 34px; border-radius: 8px;
+  background: rgba(0,180,196,0.15); border: 1px solid rgba(0,180,196,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; position: relative; z-index: 1;
+}
+.sec-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: #fff; position: relative; z-index: 1; }
+.sec-num {
+  margin-left: auto; font-family: 'Syne', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: .1em;
+  color: rgba(0,180,196,0.5); text-transform: uppercase; position: relative; z-index: 1;
+}
+.sec-body { padding: 26px 26px 22px; }
+
+/* ── GRID ── */
+.fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.fgrid.g3 { grid-template-columns: 1fr 1fr 1fr; }
+.fgrid.g1 { grid-template-columns: 1fr; }
+.fcol-full { grid-column: 1/-1; }
+.fgroup { display: flex; flex-direction: column; gap: 5px; }
+
+.flabel {
+  font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--mg-blue);
+}
+.flabel .req { color: var(--mg-cyan); margin-left: 2px; }
+.fhint { font-size: 11px; color: var(--mg-slate); line-height: 1.4; font-weight: 300; margin-top: -1px; }
+
+/* ── INPUTS ── */
+input[type="text"], input[type="email"], input[type="tel"],
+select, textarea {
+  width: 100%; padding: 10px 13px;
+  border: 1.5px solid rgba(30,90,160,0.2);
+  border-radius: 8px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px; color: var(--mg-navy);
+  background: #FAFCFF; outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--mg-cyan);
+  box-shadow: 0 0 0 3px rgba(0,180,196,0.12);
+  background: #fff;
+}
+textarea { resize: vertical; min-height: 80px; line-height: 1.55; }
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%230E4FA3' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+  padding-right: 32px; cursor: pointer;
+}
+.divider { border: none; border-top: 1px dashed rgba(30,90,160,0.13); margin: 20px 0; }
+
+/* ── CHIPS ── */
+.chip-group { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 3px; }
+.chip {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--mg-ice); border: 1.5px solid rgba(30,90,160,0.18);
+  border-radius: 7px; padding: 7px 13px;
+  font-size: 12px; color: var(--mg-navy); font-weight: 400;
+  cursor: pointer; transition: all .15s; user-select: none; line-height: 1;
+}
+.chip:hover { border-color: var(--mg-cyan); background: rgba(0,180,196,0.08); }
+.chip input { width: 13px; height: 13px; min-width: 13px; padding: 0; accent-color: var(--mg-cyan); cursor: pointer; }
+.chip:has(input:checked) { border-color: var(--mg-cyan); background: rgba(0,180,196,0.1); color: var(--mg-blue); font-weight: 500; }
+
+/* ── SCALE ── */
+.scale-wrap { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+.scale-endlabel { font-size: 11px; color: var(--mg-slate); white-space: nowrap; }
+.scale-btns { display: flex; gap: 5px; flex: 1; }
+.scale-btn {
+  flex: 1; padding: 9px 4px; border: 1.5px solid rgba(30,90,160,0.2);
+  border-radius: 7px; text-align: center;
+  font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+  color: var(--mg-slate); background: var(--mg-ice);
+  cursor: pointer; transition: all .15s; user-select: none;
+}
+.scale-btn:hover { border-color: var(--mg-sky); color: var(--mg-blue); background: rgba(26,143,227,0.07); }
+.scale-btn.on { background: var(--mg-navy); border-color: var(--mg-cyan); color: var(--mg-cyan); }
+
+/* ── PRIORITY TABLE ── */
+.ptable { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 13px; }
+.ptable th {
+  background: var(--mg-ice); font-family: 'Syne', sans-serif;
+  font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--mg-blue); padding: 10px 12px; text-align: left;
+  border-bottom: 1.5px solid var(--mg-border);
+}
+.ptable td { padding: 9px 12px; border-bottom: 1px solid rgba(30,90,160,0.08); vertical-align: middle; }
+.ptable tr:last-child td { border-bottom: none; }
+.ptable tr:nth-child(even) td { background: #FAFCFF; }
+.ptable select { min-width: 110px; padding: 6px 28px 6px 10px; font-size: 12px; }
+.area-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 20px;
+  background: rgba(14,79,163,0.07); color: var(--mg-blue);
+  font-size: 12px; font-weight: 500;
+}
+
+/* ── SUBMIT BLOCK ── */
+.submit-block {
+  background: #fff; border-radius: 14px;
+  border: 1.5px solid var(--mg-cyan);
+  padding: 40px 44px; text-align: center; margin-bottom: 24px;
+  box-shadow: 0 4px 24px rgba(0,180,196,0.1);
+}
+.submit-block h3 {
+  font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800;
+  color: var(--mg-navy); margin-bottom: 10px;
+}
+.submit-block p { font-size: 13px; color: var(--mg-slate); line-height: 1.7; font-weight: 300; }
+.submit-block strong { font-weight: 600; color: var(--mg-blue); }
+
+.email-link {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: var(--mg-ice); border: 1.5px solid var(--mg-cyan);
+  border-radius: 100px; padding: 10px 24px;
+  font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700;
+  color: var(--mg-blue); text-decoration: none;
+  margin: 18px 0 28px; transition: background .2s;
+}
+.email-link:hover { background: rgba(0,180,196,0.14); }
+
+/* ── SUBMIT BUTTON — azul claro visível ── */
+.btn-send {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--mg-sky);
+  color: #fff;
+  border: none; border-radius: 9px;
+  padding: 15px 56px;
+  font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+  letter-spacing: .05em; text-transform: uppercase;
+  cursor: pointer; transition: all .2s;
+  box-shadow: 0 4px 16px rgba(26,143,227,0.35);
+}
+.btn-send:hover { background: var(--mg-blue); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(14,79,163,0.35); }
+.btn-send:active { transform: translateY(0); }
+
+.submit-note { font-size: 11px; color: #9aacbf; margin-top: 16px; font-style: italic; }
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--mg-navy); padding: 22px 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.footer-tags { display: flex; align-items: center; gap: 10px; }
+.ftag {
+  background: rgba(0,180,196,0.12); border: 1px solid rgba(0,180,196,0.25);
+  border-radius: 5px; padding: 4px 10px;
+  font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--mg-cyan);
+}
+.footer p { font-size: 11px; color: rgba(255,255,255,0.28); }
+
+/* ── PRINT FAB ── */
+.print-fab {
+  position: fixed; bottom: 26px; right: 26px;
+  background: #fff; border: 1.5px solid var(--mg-cyan);
+  border-radius: 50px; padding: 11px 20px;
+  font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700;
+  letter-spacing: .04em; color: var(--mg-blue); cursor: pointer;
+  box-shadow: 0 4px 20px rgba(11,29,58,0.14);
+  transition: all .2s; display: flex; align-items: center; gap: 7px; z-index: 99;
+}
+.print-fab:hover { background: var(--mg-navy); color: var(--mg-cyan); border-color: var(--mg-navy); transform: translateY(-2px); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 720px) {
+  .hero { padding: 28px 20px 24px; }
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  .hero-title { font-size: 28px; }
+  .guide-bar { padding: 24px 20px; }
+  .guide-steps { grid-template-columns: 1fr 1fr; }
+  .progress-strip { padding: 13px 20px; }
+  .form-wrap { padding: 24px 12px 50px; }
+  .fgrid { grid-template-columns: 1fr; }
+  .fgrid.g3 { grid-template-columns: 1fr 1fr; }
+  .sec-body { padding: 18px; }
+  .footer { flex-direction: column; gap: 10px; padding: 18px; text-align: center; }
+  .print-fab { display: none; }
+}
+
+@media print {
+  .print-fab { display: none !important; }
+  body { background: #fff; }
+  .section-card { box-shadow: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="partner-row">
+        <div class="brand-pill">
+          <div class="brand-mark mg">MG</div>
+          <span class="brand-name">MedGrid</span>
+        </div>
+        <div class="partner-sep"></div>
+        <div class="brand-pill">
+          <div class="brand-mark au">AU</div>
+          <span class="brand-name">AUDA Engenharia</span>
+        </div>
+        <span class="partner-label">em parceria</span>
+      </div>
+      <div class="hero-eyebrow">Diagnóstico Institucional</div>
+      <h1 class="hero-title">
+        Formulário de<br>
+        <em>Discovery</em> —<br>
+        Transformação Digital<br>
+        em Saúde
+      </h1>
+      <p class="hero-desc">
+        Este formulário mapeia os pontos de maturidade digital da sua instituição
+        para identificar onde a solução MedGrid pode gerar mais valor e impacto operacional.
+      </p>
+      <div class="hero-tag">MedGrid IoT &amp; IA · 18+ Parâmetros</div>
+    </div>
+    <div class="hero-right">
+      <div class="stat-card">
+        <div class="stat-num">18+</div>
+        <div class="stat-label">Parâmetros monitorados em tempo real</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">8</div>
+        <div class="stat-label">Seções de diagnóstico institucional</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-strip">
+  <span class="progress-text">Progresso</span>
+  <div class="progress-bar"><div class="progress-fill" id="pgFill"></div></div>
+  <span class="progress-text" id="pgPct">0%</span>
+</div>
+
+<!-- GUIDE -->
+<div class="guide-bar">
+  <div class="guide-label">Como preencher este formulário</div>
+  <div class="guide-steps">
+    <div class="guide-step">
+      <div class="step-num">1</div>
+      <div class="step-text"><strong>Identifique-se</strong><p>Preencha os dados da instituição e do responsável na Seção 1.</p></div>
+    </div>
+    <div class="guide-step">
+      <div class="step-num">2</div>
+      <div class="step-text"><strong>Avalie cada área</strong><p>Responda honestamente sobre o estado atual de cada domínio operacional.</p></div>
+    </div>
+    <div class="guide-step">
+      <div class="step-num">3</div>
+      <div class="step-text"><strong>Use as escalas</strong><p>Clique no número (1–5) que melhor representa a situação da sua instituição.</p></div>
+    </div>
+    <div class="guide-step">
+      <div class="step-num">4</div>
+      <div class="step-text"><strong>Envie por e-mail</strong><p>Imprima em PDF ou envie diretamente para o e-mail indicado ao final.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="form-wrap">
+
+  <!-- S1 -->
+  <div class="section-card">
+    <div class="sec-head">
+      <div class="sec-ico">🏥</div>
+      <span class="sec-title">Identificação da Instituição</span>
+      <span class="sec-num">Seção 01</span>
+    </div>
+    <div class="sec-body">
+      <div class="fgrid">
+        <div class="fgroup fcol-full">
+          <label class="flabel">Nome da Instituição <span class="req">*</span></label>
+          <input type="text" id="inst-name" placeholder="Ex.: Hospital São Lucas / UPA Centro">
+        </div>
+        <div class="fgroup">
+          <label class="flabel">CNPJ</label>
+          <input type="text" placeholder="00.000.000/0001-00">
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Tipo de Instituição <span class="req">*</span></label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>Hospital Geral</option>
+            <option>Hospital Especializado</option>
+            <option>UPA / Pronto-Socorro</option>
+            <option>Clínica Ambulatorial</option>
+            <option>Centro de Diagnóstico</option>
+            <option>Hospital Universitário</option>
+            <option>Rede de Hospitais</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Natureza</label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>Privado</option>
+            <option>Público Federal</option>
+            <option>Público Estadual</option>
+            <option>Público Municipal</option>
+            <option>Filantrópico / Santa Casa</option>
+            <option>Misto</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Cidade / Estado <span class="req">*</span></label>
+          <input type="text" placeholder="Ex.: Belo Horizonte / MG">
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Nº de Leitos Ativos</label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>Menos de 50</option>
+            <option>50 – 100</option>
+            <option>101 – 200</option>
+            <option>201 – 500</option>
+            <option>501 – 1.000</option>
+            <option>Acima de 1.000</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Nº Aproximado de Equipamentos</label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>Menos de 200</option>
+            <option>200 – 500</option>
+            <option>501 – 1.000</option>
+            <option>1.001 – 3.000</option>
+            <option>Acima de 3.000</option>
+          </select>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="fgrid">
+        <div class="fgroup">
+          <label class="flabel">Responsável pelo Preenchimento <span class="req">*</span></label>
+          <input type="text" placeholder="Nome completo">
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Cargo / Função <span class="req">*</span></label>
+          <input type="text" placeholder="Ex.: Gerente de Engenharia Clínica">
+        </div>
+        <div class="fgroup">
+          <label class="flabel">E-mail Profissional <span class="req">*</span></label>
+          <input type="email" placeholder="nome@instituicao.com.br">
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Telefone / WhatsApp</label>
+          <input type="tel" placeholder="(00) 00000-0000">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2 -->
+  <div class="section-card">
+    <div class="sec-head">
+      <div class="sec-ico">🔧</div>
+      <span class="sec-title">Gestão de Equipamentos e Ativos</span>
+      <span class="sec-num">Seção 02</span>
+    </div>
+    <div class="sec-body">
+      <div class="fgrid g1">
+        <div class="fgroup">
+          <label class="flabel">Como é feito o controle de inventário atualmente?</label>
+          <div class="chip-group">
+            <label class="chip"><input type="checkbox"> Planilha Excel / manual</label>
+            <label class="chip"><input type="checkbox"> Sistema GMAO/CMMS</label>
+            <label class="chip"><input type="checkbox"> ERP integrado</label>
+            <label class="chip"><input type="checkbox"> Sistema próprio</label>
+            <label class="chip"><input type="checkbox"> Sem controle sistematizado</label>
+            <label class="chip"><input type="checkbox"> Outro</label>
+          </div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="fgrid">
+        <div class="fgroup">
+          <label class="flabel">Frequência de perdas ou extravios</label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>Raramente / nunca</option>
+            <option>Algumas vezes por ano</option>
+            <option>Mensalmente</option>
+            <option>Semanalmente</option>
+            <option>Com frequência desconhecida</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Rastreamento utilizado</label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>Sim, RFID ativo</option>
+            <option>Sim, QR Code / código de barras</option>
+            <option>Sim, GPS</option>
+            <option>Não utiliza rastreamento</option>
+            <option>Em implantação</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Acurácia estimada do inventário</label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>Acima de 95%</option>
+            <option>Entre 80% e 95%</option>
+            <option>Entre 60% e 80%</option>
+            <option>Abaixo de 60%</option>
+            <option>Não sei informar</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Localização de equipamentos no hospital</label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>Sistema de geolocalização indoor</option>
+            <option>Mapa físico / crachás</option>
+            <option>Contato direto com setores</option>
+            <option>Não há processo definido</option>
+          </select>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="fgroup">
+        <label class="flabel">Maturidade — Gestão de Equipamentos</label>
+        <span class="fhint">1 = Totalmente manual · 5 = Automatizado e proativo</span>
+        <div class="scale-wrap">
+          <span class="scale-endlabel">Iniciante</span>
+          <div class="scale-btns">
+            <div class="scale-btn" onclick="pickScale(this,'eq')">1</div>
+            <div class="scale-btn" onclick="pickScale(this,'eq')">2</div>
+            <div class="scale-btn" onclick="pickScale(this,'eq')">3</div>
+            <div class="scale-btn" onclick="pickScale(this,'eq')">4</div>
+            <div class="scale-btn" onclick="pickScale(this,'eq')">5</div>
+          </div>
+          <span class="scale-endlabel">Avançado</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3 -->
+  <div class="section-card">
+    <div class="sec-head">
+      <div class="sec-ico">⚙️</div>
+      <span class="sec-title">Manutenção Preditiva e Corretiva</span>
+      <span class="sec-num">Seção 03</span>
+    </div>
+    <div class="sec-body">
+      <div class="fgrid">
+        <div class="fgroup">
+          <label class="flabel">Modelo de manutenção predominante</label>
+          <div class="chip-group">
+            <label class="chip"><input type="checkbox"> Corretiva (quebrou → conserta)</label>
+            <label class="chip"><input type="checkbox"> Preventiva programada</label>
+            <label class="chip"><input type="checkbox"> Preditiva baseada em dados</label>
+            <label class="chip"><input type="checkbox"> Mix dos três</label>
+          </div>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Equipe de engenharia clínica / manutenção</label>
+          <div class="chip-group">
+            <label class="chip"><input type="radio" name="engclin"> Equipe interna própria</label>
+            <label class="chip"><input type="radio" name="engclin"> Terceirizado</label>
+            <label class="chip"><input type="radio" name="engclin"> Misto (interno + terceiro)</label>
+            <label class="chip"><input type="radio" name="engclin"> Sem equipe estruturada</label>
+          </div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="fgrid g3">
+        <div class="fgroup">
+          <label class="flabel">MTTR médio (resolução de chamados)</label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>Menos de 4 horas</option>
+            <option>4 a 24 horas</option>
+            <option>1 a 3 dias</option>
+            <option>Mais de 3 dias</option>
+            <option>Não monitorado</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">% equipamentos críticos com falhas recorrentes</label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>Menos de 5%</option>
+            <option>5% a 15%</option>
+            <option>15% a 30%</option>
+            <option>Acima de 30%</option>
+            <option>Não sei informar</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Monitoramento de parâmetros em tempo real</label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>Sim, em todos os críticos</option>
+            <option>Sim, parcialmente</option>
+            <option>Não, somente inspeção periódica</option>
+            <option>Não há monitoramento</option>
+          </select>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="fgroup">
+        <label class="flabel">Maturidade — Manutenção</label>
+        <span class="fhint">1 = Apenas corretiva · 5 = Preditiva integrada com IA</span>
+        <div class="scale-wrap">
+          <span class="scale-endlabel">Reativa</span>
+          <div class="scale-btns">
+            <div class="scale-btn" onclick="pickScale(this,'man')">1</div>
+            <div class="scale-btn" onclick="pickScale(this,'man')">2</div>
+            <div class="scale-btn" onclick="pickScale(this,'man')">3</div>
+            <div class="scale-btn" onclick="pickScale(this,'man')">4</div>
+            <div class="scale-btn" onclick="pickScale(this,'man')">5</div>
+          </div>
+          <span class="scale-endlabel">Preditiva IA</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S4 -->
+  <div class="section-card">
+    <div class="sec-head">
+      <div class="sec-ico">🏗️</div>
+      <span class="sec-title">Infraestrutura e Facilities Hospitalares</span>
+      <span class="sec-num">Seção 04</span>
+    </div>
+    <div class="sec-body">
+      <div class="fgroup">
+        <label class="flabel">Sistemas de infraestrutura presentes (marque todos)</label>
+        <div class="chip-group">
+          <label class="chip"><input type="checkbox"> Grupo Gerador</label>
+          <label class="chip"><input type="checkbox"> UPS / No-break</label>
+          <label class="chip"><input type="checkbox"> CFTV / Câmeras</label>
+          <label class="chip"><input type="checkbox"> Central de Gases Medicinais</label>
+          <label class="chip"><input type="checkbox"> Sistema AVAC (Climatização)</label>
+          <label class="chip"><input type="checkbox"> Elevadores hospitalares</label>
+          <label class="chip"><input type="checkbox"> Painéis elétricos (CCM/QGBT)</label>
+          <label class="chip"><input type="checkbox"> Sistema de alarme de incêndio</label>
+          <label class="chip"><input type="checkbox"> Bombeamento de água</label>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="fgrid">
+        <div class="fgroup">
+          <label class="flabel">Monitoramento de sistemas críticos</label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>BMS / Sistema de Automação Predial</option>
+            <option>Monitoramento manual por rondas</option>
+            <option>Alarmes locais (sem centralização)</option>
+            <option>Não há monitoramento sistematizado</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Controle de consumo de energia por setor</label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>Sim, medição por setor em tempo real</option>
+            <option>Sim, medição global mensal</option>
+            <option>Parcialmente</option>
+            <option>Não há controle por setor</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Frequência de falhas em sistemas críticos</label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>Raramente (menos de 1x/ano)</option>
+            <option>Algumas vezes ao ano</option>
+            <option>Mensalmente</option>
+            <option>Semanalmente ou mais</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">IoT na infraestrutura (sensores conectados)</label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>Sim, ampla cobertura IoT</option>
+            <option>Sim, projetos piloto em andamento</option>
+            <option>Não, mas há interesse</option>
+            <option>Não, sem planos no curto prazo</option>
+          </select>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="fgroup">
+        <label class="flabel">Maturidade — Infraestrutura e Facilities</label>
+        <span class="fhint">1 = Sem monitoramento · 5 = BMS integrado com IoT e alertas automáticos</span>
+        <div class="scale-wrap">
+          <span class="scale-endlabel">Sem monitoramento</span>
+          <div class="scale-btns">
+            <div class="scale-btn" onclick="pickScale(this,'inf')">1</div>
+            <div class="scale-btn" onclick="pickScale(this,'inf')">2</div>
+            <div class="scale-btn" onclick="pickScale(this,'inf')">3</div>
+            <div class="scale-btn" onclick="pickScale(this,'inf')">4</div>
+            <div class="scale-btn" onclick="pickScale(this,'inf')">5</div>
+          </div>
+          <span class="scale-endlabel">IoT Integrado</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S5 -->
+  <div class="section-card">
+    <div class="sec-head">
+      <div class="sec-ico">📊</div>
+      <span class="sec-title">Dados, Dashboards e Tomada de Decisão</span>
+      <span class="sec-num">Seção 05</span>
+    </div>
+    <div class="sec-body">
+      <div class="fgrid">
+        <div class="fgroup">
+          <label class="flabel">Acesso a indicadores operacionais em tempo real</label>
+          <div class="chip-group">
+            <label class="chip"><input type="radio" name="dash"> Dashboard em tempo real</label>
+            <label class="chip"><input type="radio" name="dash"> Relatórios diários/semanais</label>
+            <label class="chip"><input type="radio" name="dash"> Relatórios mensais</label>
+            <label class="chip"><input type="radio" name="dash"> Sem indicadores sistematizados</label>
+          </div>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Dados mais necessários acompanhar (até 3)</label>
+          <div class="chip-group">
+            <label class="chip"><input type="checkbox"> Localização de equipamentos</label>
+            <label class="chip"><input type="checkbox"> Consumo de energia</label>
+            <label class="chip"><input type="checkbox"> Temperatura / Umidade</label>
+            <label class="chip"><input type="checkbox"> Status de manutenções</label>
+            <label class="chip"><input type="checkbox"> Disponibilidade de equipamentos</label>
+            <label class="chip"><input type="checkbox"> Indicadores financeiros</label>
+            <label class="chip"><input type="checkbox"> Alarmes de falha</label>
+          </div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="fgroup fcol-full">
+        <label class="flabel">Principais KPIs acompanhados pela equipe de operações</label>
+        <textarea placeholder="Ex.: Taxa de disponibilidade de equipamentos críticos, MTTR, consumo kWh/mês..."></textarea>
+      </div>
+      <hr class="divider">
+      <div class="fgroup">
+        <label class="flabel">Maturidade — Cultura de dados e BI</label>
+        <span class="fhint">1 = Decisões intuitivas · 5 = BI em tempo real com IA</span>
+        <div class="scale-wrap">
+          <span class="scale-endlabel">Intuitivo</span>
+          <div class="scale-btns">
+            <div class="scale-btn" onclick="pickScale(this,'dados')">1</div>
+            <div class="scale-btn" onclick="pickScale(this,'dados')">2</div>
+            <div class="scale-btn" onclick="pickScale(this,'dados')">3</div>
+            <div class="scale-btn" onclick="pickScale(this,'dados')">4</div>
+            <div class="scale-btn" onclick="pickScale(this,'dados')">5</div>
+          </div>
+          <span class="scale-endlabel">BI com IA</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S6 -->
+  <div class="section-card">
+    <div class="sec-head">
+      <div class="sec-ico">🔐</div>
+      <span class="sec-title">Segurança Patrimonial e Compliance Regulatório</span>
+      <span class="sec-num">Seção 06</span>
+    </div>
+    <div class="sec-body">
+      <div class="fgrid">
+        <div class="fgroup">
+          <label class="flabel">Controle de acesso a equipamentos críticos</label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>Sim, controle digital integrado</option>
+            <option>Sim, controle físico (chaves, crachás)</option>
+            <option>Parcialmente</option>
+            <option>Não há controle formal</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Certificações / órgãos reguladores</label>
+          <div class="chip-group">
+            <label class="chip"><input type="checkbox"> ONA (Nível 1, 2 ou 3)</label>
+            <label class="chip"><input type="checkbox"> ANVISA</label>
+            <label class="chip"><input type="checkbox"> HIMSS</label>
+            <label class="chip"><input type="checkbox"> JCI</label>
+            <label class="chip"><input type="checkbox"> LGPD em implantação</label>
+            <label class="chip"><input type="checkbox"> Sem certificação ativa</label>
+          </div>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Rastreabilidade de uso dos equipamentos</label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>Registro eletrônico automatizado</option>
+            <option>Registro manual em fichas</option>
+            <option>Sistema parcialmente automatizado</option>
+            <option>Não há rastreabilidade</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Política de descarte de equipamentos obsoletos</label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>Sim, com laudo técnico e processo regulamentado</option>
+            <option>Sim, mas sem processo formal documentado</option>
+            <option>Não, é feito de forma ad hoc</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S7 -->
+  <div class="section-card">
+    <div class="sec-head">
+      <div class="sec-ico">🎯</div>
+      <span class="sec-title">Prioridades e Expectativas de Transformação Digital</span>
+      <span class="sec-num">Seção 07</span>
+    </div>
+    <div class="sec-body">
+      <div class="fgroup">
+        <label class="flabel">Prioridade de transformação digital por área</label>
+        <span class="fhint">Selecione a prioridade para cada domínio</span>
+        <table class="ptable">
+          <thead>
+            <tr><th>Área / Domínio</th><th>Prioridade</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="area-badge">🔧 Inventário e Rastreamento de Equipamentos</span></td><td><select><option value="">Selecione...</option><option>🔴 Alta</option><option>🟡 Média</option><option>🟢 Baixa</option><option>— Não se aplica</option></select></td></tr>
+            <tr><td><span class="area-badge">⚙️ Manutenção Preditiva com IA</span></td><td><select><option value="">Selecione...</option><option>🔴 Alta</option><option>🟡 Média</option><option>🟢 Baixa</option><option>— Não se aplica</option></select></td></tr>
+            <tr><td><span class="area-badge">⚡ Monitoramento de Energia e Utilidades</span></td><td><select><option value="">Selecione...</option><option>🔴 Alta</option><option>🟡 Média</option><option>🟢 Baixa</option><option>— Não se aplica</option></select></td></tr>
+            <tr><td><span class="area-badge">📍 Geolocalização Indoor de Ativos</span></td><td><select><option value="">Selecione...</option><option>🔴 Alta</option><option>🟡 Média</option><option>🟢 Baixa</option><option>— Não se aplica</option></select></td></tr>
+            <tr><td><span class="area-badge">🌡️ Monitoramento de Temperatura e Umidade</span></td><td><select><option value="">Selecione...</option><option>🔴 Alta</option><option>🟡 Média</option><option>🟢 Baixa</option><option>— Não se aplica</option></select></td></tr>
+            <tr><td><span class="area-badge">📊 Dashboards e Relatórios em Tempo Real</span></td><td><select><option value="">Selecione...</option><option>🔴 Alta</option><option>🟡 Média</option><option>🟢 Baixa</option><option>— Não se aplica</option></select></td></tr>
+            <tr><td><span class="area-badge">🔐 Segurança Patrimonial e Controle de Acesso</span></td><td><select><option value="">Selecione...</option><option>🔴 Alta</option><option>🟡 Média</option><option>🟢 Baixa</option><option>— Não se aplica</option></select></td></tr>
+            <tr><td><span class="area-badge">💊 Rastreabilidade de Insumos / Medicamentos</span></td><td><select><option value="">Selecione...</option><option>🔴 Alta</option><option>🟡 Média</option><option>🟢 Baixa</option><option>— Não se aplica</option></select></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <hr class="divider">
+      <div class="fgrid">
+        <div class="fgroup">
+          <label class="flabel">Principal motivador para investir em transformação digital</label>
+          <div class="chip-group">
+            <label class="chip"><input type="radio" name="motiv"> Redução de custos operacionais</label>
+            <label class="chip"><input type="radio" name="motiv"> Melhoria da segurança do paciente</label>
+            <label class="chip"><input type="radio" name="motiv"> Exigência regulatória</label>
+            <label class="chip"><input type="radio" name="motiv"> Ganho de eficiência operacional</label>
+            <label class="chip"><input type="radio" name="motiv"> Diferencial competitivo</label>
+            <label class="chip"><input type="radio" name="motiv"> Pressão da diretoria / conselho</label>
+          </div>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Horizonte esperado para início do projeto</label>
+          <div class="chip-group">
+            <label class="chip"><input type="radio" name="horizonte"> Imediato (menos de 3 meses)</label>
+            <label class="chip"><input type="radio" name="horizonte"> 3 a 6 meses</label>
+            <label class="chip"><input type="radio" name="horizonte"> 6 a 12 meses</label>
+            <label class="chip"><input type="radio" name="horizonte"> Acima de 1 ano</label>
+            <label class="chip"><input type="radio" name="horizonte"> Ainda em avaliação</label>
+          </div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="fgroup">
+        <label class="flabel">Orçamento estimado para transformação digital (anual)</label>
+        <div class="chip-group">
+          <label class="chip"><input type="radio" name="budget"> Até R$ 100 mil</label>
+          <label class="chip"><input type="radio" name="budget"> R$ 100 – 300 mil</label>
+          <label class="chip"><input type="radio" name="budget"> R$ 300 – 700 mil</label>
+          <label class="chip"><input type="radio" name="budget"> R$ 700 mil – 1,5 mi</label>
+          <label class="chip"><input type="radio" name="budget"> Acima de R$ 1,5 mi</label>
+          <label class="chip"><input type="radio" name="budget"> Não definido</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S8 -->
+  <div class="section-card">
+    <div class="sec-head">
+      <div class="sec-ico">💬</div>
+      <span class="sec-title">Desafios Atuais e Contexto Adicional</span>
+      <span class="sec-num">Seção 08</span>
+    </div>
+    <div class="sec-body">
+      <div class="fgrid g1">
+        <div class="fgroup">
+          <label class="flabel">Os 3 maiores desafios operacionais da instituição atualmente</label>
+          <textarea style="min-height:100px;" placeholder="Ex.: Dificuldade de localizar equipamentos nos andares, alto índice de quebras inesperadas em ventiladores, falta de visibilidade do consumo de energia por setor..."></textarea>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Tentativas anteriores de digitalização / automação</label>
+          <textarea style="min-height:88px;" placeholder="Compartilhe experiências anteriores, projetos pilotos, dificuldades encontradas, aprendizados..."></textarea>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Projetos estratégicos planejados para os próximos 2 anos</label>
+          <textarea style="min-height:80px;" placeholder="Ex.: Construção de novo bloco cirúrgico, expansão da UTI, modernização do PA..."></textarea>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Comentários adicionais para a equipe AUDA / MedGrid</label>
+          <textarea style="min-height:80px;" placeholder="Qualquer informação adicional que possa ajudar a equipe a entender melhor as necessidades da sua instituição..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-block">
+    <h3>Pronto para dar o próximo passo?</h3>
+    <p>Após preencher todas as seções, encaminhe este formulário para nossa equipe.</p>
+    <p>Nossa especialista em saúde digital entrará em contato em até <strong>2 dias úteis</strong> para agendar um briefing personalizado.</p>
+    <br>
+    <a class="email-link" href="mailto:Thayse.azeredo@audaengenharia.com.br?subject=Formulário de Discovery MedGrid — [Nome da Instituição]">
+      ✉ &nbsp;Thayse.azeredo@audaengenharia.com.br
+    </a>
+    <br>
+    <button class="btn-send" onclick="doSubmit()">
+      📤 &nbsp;Enviar Formulário por E-mail
+    </button>
+    <p class="submit-note">💡 Use Ctrl+P (Cmd+P no Mac) para imprimir / salvar em PDF antes de enviar.</p>
+  </div>
+
+</div><!-- /form-wrap -->
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-tags">
+    <span class="ftag">MedGrid © 2025</span>
+    <span class="ftag">AUDA Engenharia</span>
+    <p style="margin-left:10px;">Transformando dados em valor para a saúde</p>
+  </div>
+  <p>Documento confidencial · Discovery Institucional</p>
+</div>
+
+<button class="print-fab" onclick="window.print()">🖨 Imprimir / PDF</button>
+
+<script>
+function pickScale(el, grp) {
+  el.closest('.scale-btns').querySelectorAll('.scale-btn').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  refreshProgress();
+}
+
+function refreshProgress() {
+  const fields = document.querySelectorAll('input, select, textarea');
+  let filled = 0, total = 0;
+  fields.forEach(f => {
+    if (f.type === 'checkbox' || f.type === 'radio') {
+      total++;
+      if (f.checked) filled++;
+    } else {
+      total++;
+      if (f.value && f.value !== '') filled++;
+    }
+  });
+  const scales = document.querySelectorAll('.scale-btn.on').length;
+  const pct = Math.min(100, Math.round(((filled + scales) / (total + 4)) * 100));
+  document.getElementById('pgFill').style.width = pct + '%';
+  document.getElementById('pgPct').textContent = pct + '%';
+}
+
+document.querySelectorAll('input, select, textarea').forEach(el => {
+  el.addEventListener('change', refreshProgress);
+  el.addEventListener('input', refreshProgress);
+});
+
+function doSubmit() {
+  const inst = document.getElementById('inst-name').value || '[Nome da Instituição]';
+  const subj = encodeURIComponent('Formulário de Discovery MedGrid — ' + inst);
+  const body = encodeURIComponent(
+    'Olá Thayse,\n\nSegue o Formulário de Discovery MedGrid preenchido pela instituição: ' + inst +
+    '.\n\nPor favor, consulte o arquivo PDF em anexo ou entre em contato para agendar o briefing.\n\nAtenciosamente.'
+  );
+  window.location.href = 'mailto:Thayse.azeredo@audaengenharia.com.br?subject=' + subj + '&body=' + body;
+}
+</script>
+
+</body>
+</html>
