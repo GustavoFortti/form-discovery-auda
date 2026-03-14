@@ -1028,10 +1028,95 @@ document.querySelectorAll('input, select, textarea').forEach(el => {
 function doSubmit() {
   const inst = document.getElementById('inst-name').value || '[Nome da Instituição]';
   const subj = encodeURIComponent('Formulário de Discovery MedGrid — ' + inst);
-  const body = encodeURIComponent(
-    'Olá Thayse,\n\nSegue o Formulário de Discovery MedGrid preenchido pela instituição: ' + inst +
-    '.\n\nPor favor, consulte o arquivo PDF em anexo ou entre em contato para agendar o briefing.\n\nAtenciosamente.'
-  );
+
+  const lines = [];
+  lines.push('Olá Thayse,');
+  lines.push('');
+  lines.push('Segue o Formulário de Discovery MedGrid preenchido pela instituição: ' + inst + '.');
+  lines.push('');
+  lines.push('============================================================');
+
+  document.querySelectorAll('.section-card').forEach(section => {
+    const secTitle = section.querySelector('.sec-title')?.textContent?.trim() || '';
+    const secNum   = section.querySelector('.sec-num')?.textContent?.trim()   || '';
+    lines.push('');
+    lines.push(secNum + ' — ' + secTitle);
+    lines.push('------------------------------------------------------------');
+
+    section.querySelectorAll('.fgroup').forEach(fgroup => {
+      const label = (fgroup.querySelector('.flabel')?.textContent || '').replace(/\*/g, '').trim();
+      if (!label) return;
+
+      // Tabela de prioridades
+      const ptable = fgroup.querySelector('.ptable');
+      if (ptable) {
+        lines.push('');
+        lines.push(label + ':');
+        ptable.querySelectorAll('tbody tr').forEach(row => {
+          const area     = row.querySelector('.area-badge')?.textContent?.trim() || '';
+          const priority = row.querySelector('select')?.value || '(não selecionado)';
+          lines.push('  • ' + area + ': ' + priority);
+        });
+        return;
+      }
+
+      // Checkboxes
+      const checkboxes = fgroup.querySelectorAll('input[type="checkbox"]');
+      if (checkboxes.length > 0) {
+        const checked = [...checkboxes]
+          .filter(cb => cb.checked)
+          .map(cb => cb.closest('.chip')?.textContent?.trim())
+          .filter(Boolean);
+        lines.push(label + ': ' + (checked.length ? checked.join(', ') : '(nenhum selecionado)'));
+        return;
+      }
+
+      // Radio buttons
+      const radios = fgroup.querySelectorAll('input[type="radio"]');
+      if (radios.length > 0) {
+        const checked = [...radios].find(r => r.checked);
+        const val = checked?.closest('.chip')?.textContent?.trim() || '(não selecionado)';
+        lines.push(label + ': ' + val);
+        return;
+      }
+
+      // Escala de maturidade
+      if (fgroup.querySelector('.scale-btn')) {
+        const on = fgroup.querySelector('.scale-btn.on');
+        lines.push(label + ': ' + (on ? on.textContent.trim() + '/5' : '(não avaliado)'));
+        return;
+      }
+
+      // Textarea
+      const textarea = fgroup.querySelector('textarea');
+      if (textarea) {
+        lines.push('');
+        lines.push(label + ':');
+        lines.push(textarea.value.trim() || '(não preenchido)');
+        lines.push('');
+        return;
+      }
+
+      // Select
+      const select = fgroup.querySelector('select');
+      if (select) {
+        lines.push(label + ': ' + (select.value || '(não selecionado)'));
+        return;
+      }
+
+      // Input text / email / tel
+      const input = fgroup.querySelector('input');
+      if (input) {
+        lines.push(label + ': ' + (input.value.trim() || '(não preenchido)'));
+      }
+    });
+  });
+
+  lines.push('');
+  lines.push('============================================================');
+  lines.push('Atenciosamente.');
+
+  const body = encodeURIComponent(lines.join('\n'));
   window.location.href = 'mailto:Thayse.azeredo@audaengenharia.com.br?subject=' + subj + '&body=' + body;
 }
 </script>
