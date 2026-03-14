@@ -347,16 +347,8 @@ select {
   <div class="hero-inner">
     <div>
       <div class="partner-row">
-        <div class="brand-pill">
-          <div class="brand-mark mg">MG</div>
-          <span class="brand-name">MedGrid</span>
-        </div>
-        <div class="partner-sep"></div>
-        <div class="brand-pill">
-          <div class="brand-mark au">AU</div>
-          <span class="brand-name">AUDA Engenharia</span>
-        </div>
-        <span class="partner-label">em parceria</span>
+        <span class="ftag">MedGrid</span>
+        <span class="ftag">AUDA Engenharia</span>
       </div>
       <div class="hero-eyebrow">Diagnóstico Institucional</div>
       <h1 class="hero-title">
@@ -1028,11 +1020,99 @@ document.querySelectorAll('input, select, textarea').forEach(el => {
 function doSubmit() {
   const inst = document.getElementById('inst-name').value || '[Nome da Instituição]';
   const subj = encodeURIComponent('Formulário de Discovery MedGrid — ' + inst);
-  const body = encodeURIComponent(
-    'Olá Thayse,\n\nSegue o Formulário de Discovery MedGrid preenchido pela instituição: ' + inst +
-    '.\n\nPor favor, consulte o arquivo PDF em anexo ou entre em contato para agendar o briefing.\n\nAtenciosamente.'
-  );
-  window.location.href = 'mailto:Thayse.azeredo@audaengenharia.com.br?subject=' + subj + '&body=' + body;
+
+  const lines = [];
+  lines.push('Olá Thayse,');
+  lines.push('');
+  lines.push('Segue o Formulário de Discovery MedGrid preenchido pela instituição: ' + inst + '.');
+  lines.push('');
+
+  document.querySelectorAll('.section-card').forEach(section => {
+    const secTitle = section.querySelector('.sec-title')?.textContent?.trim() || '';
+    const secNum   = section.querySelector('.sec-num')?.textContent?.trim()   || '';
+    const secLines = [];
+
+    section.querySelectorAll('.fgroup').forEach(fgroup => {
+      const label = (fgroup.querySelector('.flabel')?.textContent || '').replace(/\*/g, '').trim();
+      if (!label) return;
+
+      // Tabela de prioridades — só linhas preenchidas
+      const ptable = fgroup.querySelector('.ptable');
+      if (ptable) {
+        const rows = [];
+        ptable.querySelectorAll('tbody tr').forEach(row => {
+          const val = row.querySelector('select')?.value;
+          if (!val) return;
+          const area = row.querySelector('.area-badge')?.textContent?.trim() || '';
+          rows.push('  ' + area + ': ' + val);
+        });
+        if (rows.length) {
+          secLines.push(label + ':');
+          rows.forEach(r => secLines.push(r));
+        }
+        return;
+      }
+
+      // Checkboxes — só marcados
+      const checkboxes = fgroup.querySelectorAll('input[type="checkbox"]');
+      if (checkboxes.length > 0) {
+        const checked = [...checkboxes]
+          .filter(cb => cb.checked)
+          .map(cb => cb.closest('.chip')?.textContent?.trim())
+          .filter(Boolean);
+        if (checked.length) secLines.push(label + ': ' + checked.join(', '));
+        return;
+      }
+
+      // Radio buttons — só se selecionado
+      const radios = fgroup.querySelectorAll('input[type="radio"]');
+      if (radios.length > 0) {
+        const checked = [...radios].find(r => r.checked);
+        if (checked) secLines.push(label + ': ' + (checked.closest('.chip')?.textContent?.trim() || ''));
+        return;
+      }
+
+      // Escala de maturidade — só se clicado
+      if (fgroup.querySelector('.scale-btn')) {
+        const on = fgroup.querySelector('.scale-btn.on');
+        if (on) secLines.push(label + ': ' + on.textContent.trim() + '/5');
+        return;
+      }
+
+      // Textarea — só se preenchida
+      const textarea = fgroup.querySelector('textarea');
+      if (textarea) {
+        const v = textarea.value.trim();
+        if (v) { secLines.push(label + ':'); secLines.push(v); }
+        return;
+      }
+
+      // Select — só se escolhido
+      const select = fgroup.querySelector('select');
+      if (select) {
+        if (select.value) secLines.push(label + ': ' + select.value);
+        return;
+      }
+
+      // Input texto — só se preenchido
+      const input = fgroup.querySelector('input');
+      if (input) {
+        const v = input.value.trim();
+        if (v) secLines.push(label + ': ' + v);
+      }
+    });
+
+    if (secLines.length) {
+      lines.push('--- ' + secNum + ': ' + secTitle + ' ---');
+      secLines.forEach(l => lines.push(l));
+      lines.push('');
+    }
+  });
+
+  lines.push('Atenciosamente.');
+
+  const body = lines.join('\n');
+  window.location.href = 'mailto:Thayse.azeredo@audaengenharia.com.br?subject=' + subj + '&body=' + encodeURIComponent(body);
 }
 </script>
 
